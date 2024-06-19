@@ -1,7 +1,12 @@
 from flask import Flask, request
 from xml.etree import ElementTree as ET
+import logging
+from datetime import datetime
 
 app = Flask(__name__)
+
+# Configuração do logger
+logging.basicConfig(filename='teste.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
 @app.route('/', methods=['POST'])
 def feed_data():
@@ -12,6 +17,9 @@ def feed_data():
             # Obtem o conteúdo da requisição
             request_string = request.form['RequestString']
             
+            # Grava o request_string no arquivo de log com a data e hora de acesso
+            logging.info(f'RequestString: {request_string}')
+            
             # Parseia o XML
             root = ET.fromstring(request_string)
             
@@ -19,7 +27,7 @@ def feed_data():
             event_type = root.find('EventType').text
             entry_type = root.find('EntryType').text
             entry_source = root.find('EntrySource').text
-            print(root)
+            #print(root)
             # Continue com os outros campos conforme necessário
             
             # Aqui você pode realizar a lógica de processamento dos dados recebidos
